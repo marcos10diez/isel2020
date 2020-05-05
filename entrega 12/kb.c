@@ -12,7 +12,7 @@ void* f_kb (void* arg)
 {
 	struct timeval next_activation;
 	struct timeval now, timeout;
-  char* ch;
+  int ch;
 
 	gettimeofday (&next_activation, NULL);
 	while (1) {
@@ -22,16 +22,15 @@ void* f_kb (void* arg)
 		timeval_sub (&timeout, &next_activation, &now);
 		select (0, NULL, NULL, NULL, &timeout) ;
     // Stores the pressed key in ch
-    scanf("%c",(char*)&ch);
-
+    scanf("%d",&ch);
     // Terminates the loop
     // when escape is pressed
-    if (((int)ch) == 27){
+    if (ch == 1){
       pthread_mutex_lock (&m_botonAlarma);
     	botonAlarma=1;
     	pthread_mutex_unlock (&m_botonAlarma);
     }
-    if ((int)ch == 32){
+    if (ch == 2){
       pthread_mutex_lock (&m_botonLed);
       botonLed=1;
       pthread_mutex_unlock (&m_botonLed);

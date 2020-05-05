@@ -17,7 +17,7 @@ static int led = 0;
 
 //Variables
 static struct timeval timer_endtime;
-static int T = 1000;
+static int T = 3000;
 
 //Se definen los estados
 enum fsm_state{
@@ -43,6 +43,8 @@ static int finTiempo (fsm_t* this){
 //FuncionesTransicion
 static void apagarLed(fsm_t* this){
 	led = 0;
+	printf("LED apagado \n");
+
 }
 
 static void encenderLed (fsm_t* this){
@@ -50,6 +52,7 @@ static void encenderLed (fsm_t* this){
 	botonLed=0;
 	pthread_mutex_unlock (&m_botonLed);
 	led = 1;
+	printf("LED encendido \n");
 	timer_start(T);
 }
 
@@ -57,6 +60,7 @@ static void actualizarTimer(fsm_t* this){
 	pthread_mutex_lock (&m_botonLed);
 	botonLed=0;
 	pthread_mutex_unlock (&m_botonLed);
+	printf("%d \n", led);
 	timer_start(T);
 }
 

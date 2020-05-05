@@ -21,16 +21,16 @@ static int alarma = 0;
 
 //Variables
 static struct timeval timer_endtime;
-static int T = 1000;
+static int T = 2000;
 static int d1 = 0;
 static int d2 = 0;
 static int d3 = 0;
 static int pulsacionMax;
 
 //10 means 0
-const int c1 = 5;
+const int c1 = 1;
 const int c2 = 2;
-const int c3 = 6;
+const int c3 = 3;
 
 //Se definen los estados
 enum fsm_state{
@@ -48,6 +48,10 @@ static int botonPulsado (fsm_t* this) {
 	int ret=botonAlarma;
 	pthread_mutex_unlock (&m_botonAlarma);
 	return ret;
+}
+static void cambioEstado (fsm_t* this) {
+		timer_start(T);
+		printf("Pasamos al estado %d \n", this->current_state);
 }
 static int finTiempoOPulsaciones (fsm_t* this){
 	struct timeval now;
@@ -80,6 +84,7 @@ static int finTiempoOPulsaciones (fsm_t* this){
 //		case default:
 //			break;
 	}
+	// printf("Cambio de estado. Estado = %d \n", this->current_state);
 	if((timeval_less(&timer_endtime, &now)==1)||(pulsacionMax==1)){
 		return 1;
 	}
@@ -113,6 +118,7 @@ static void incrementar(fsm_t* this){
 //			break;
 	}
 	timer_start(T);
+	printf("Estás en el estado %d y tu código es %d : %d : %d \n", this->current_state, d1, d2, d3);
 }
 
 static void comprobarCodigo(fsm_t* this){
@@ -123,7 +129,12 @@ static void comprobarCodigo(fsm_t* this){
 		 else{
 		 	alarma = 1;
 		 }
+		 printf("¡Código correcto! :) \n");
 	}
+	else{
+		printf("¡Código incorrecto! :(\n");
+	}
+	printf("Alarma = %d \n",alarma);
 	d1 = 0;
 	d2 = 0;
 	d3 = 0;
@@ -143,9 +154,9 @@ fsm_t* fsm_new_alarma ()
 	static fsm_trans_t tt[] = {
 		{ idle,botonPulsado,st1,incrementar},
 		{ st1,botonPulsado,st1,incrementar },
-		{ st1,finTiempoOPulsaciones,st2,NULL },
+		{ st1,finTiempoOPulsaciones,st2,cambioEstado },
 		{ st2,botonPulsado,st2,incrementar },
-		{ st2,finTiempoOPulsaciones,st3,NULL},
+		{ st2,finTiempoOPulsaciones,st3,cambioEstado},
 		{ st3,botonPulsado,st3,incrementar },
 		{ st3,finTiempoOPulsaciones,idle,comprobarCodigo },
 		{ -1, NULL, -1, NULL },
