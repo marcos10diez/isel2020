@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
 #include <ncurses.h>
 
 void* f_kb (void* arg)
