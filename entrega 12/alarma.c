@@ -5,6 +5,8 @@
 #include <string.h>
 #include <time.h>
 
+
+
 //Variables de entrada
 int botonAlarma = 0;
 pthread_mutex_t m_botonAlarma;
