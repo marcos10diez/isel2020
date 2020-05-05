@@ -105,16 +105,24 @@ static void incrementar(fsm_t* this){
 	pthread_mutex_unlock (&m_botonAlarma);
 	switch(this->current_state){
 		case idle:
-			d1++;
+			if(d1<10){
+				d1++;
+			}
 			break;
 		case st1:
-			d1++;
+			if(d1<10){
+				d1++;
+			}
 			break;
 		case st2:
-			d2++;
+			if(d2<10){
+				d2++;
+			}
 			break;
 		case st3:
-			d3++;
+			if(d3<10){
+				d3++;
+			}
 			break;
 //		case default:
 //			break;
