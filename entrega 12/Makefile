@@ -1,5 +1,5 @@
-CC=gcc -pthread
+CC=gcc
 CFLAGS=-Wall
-LDFLAGS_LINUX = -lpthread -lncurses -ltinfo
+LDFLAGS_LINUX =  -lncurses -ltinfo
 
-main: main.o task.o fsm.o alarma.o kb.o led.o
+main: main.o fsm.o alarma.o led.o time_isel.o kb.o

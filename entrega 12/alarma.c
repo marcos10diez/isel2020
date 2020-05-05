@@ -1,15 +1,13 @@
 #include "fsm.h"
-#include "task.h"
 #include "alarma.h"
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
+#include "time_isel.h"
 
 
 //Variables de entrada
 int botonAlarma = 0;
-pthread_mutex_t m_botonAlarma;
 
 //No se muy bien cuando se llama a la función
 //static void boton_Alarma(void){
@@ -46,9 +44,7 @@ enum fsm_state{
 
 //FuncionesComprobacion
 static int botonPulsado (fsm_t* this) {
-	pthread_mutex_lock (&m_botonAlarma);
 	int ret=botonAlarma;
-	pthread_mutex_unlock (&m_botonAlarma);
 	return ret;
 }
 static void cambioEstado (fsm_t* this) {
@@ -100,21 +96,27 @@ static int finTiempoOPulsaciones (fsm_t* this){
 
 //FuncionesTransicion
 static void incrementar(fsm_t* this){
-	pthread_mutex_lock (&m_botonAlarma);
 	botonAlarma=0;
-	pthread_mutex_unlock (&m_botonAlarma);
 	switch(this->current_state){
 		case idle:
-			d1++;
+			if(d1<10){
+				d1++;
+			}
 			break;
 		case st1:
-			d1++;
+			if(d1<10){
+				d1++;
+			}
 			break;
 		case st2:
-			d2++;
+			if(d2<10){
+				d2++;
+			}
 			break;
 		case st3:
-			d3++;
+			if(d3<10){
+				d3++;
+			}
 			break;
 //		case default:
 //			break;
@@ -163,23 +165,6 @@ fsm_t* fsm_new_alarma ()
 		{ st3,finTiempoOPulsaciones,idle,comprobarCodigo },
 		{ -1, NULL, -1, NULL },
 	};
+	gettimeofday(&timer_endtime, NULL);
 	return fsm_new (tt);
-}
-
-void* f_alarma (void* arg)
-{
-	struct timeval next_activation;
-	struct timeval now, timeout;
-	fsm_t* fsm = fsm_new_alarma();
-
-	gettimeofday (&next_activation, NULL);
-	while (1) {
-		struct timeval *period = task_get_period (pthread_self());
-		timeval_add (&next_activation, &next_activation, period);
-		gettimeofday (&now, NULL);
-		timeval_sub (&timeout, &next_activation, &now);
-		select (0, NULL, NULL, NULL, &timeout) ;
-
-		fsm_fire (fsm);
-	}
 }
