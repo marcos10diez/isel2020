@@ -1,4 +1,3 @@
-#include "fsm.h"
 #include "alarma.h"
 #include "led.h"
 #include "kb.h"

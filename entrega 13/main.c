@@ -14,9 +14,9 @@ int main ()
 	mutex_init (&m_botonLed, 2);
   mutex_init (&m_botonAlarma, 2);
 
-	alarma = task_new ("alarma", f_alarma, 150, 150, 2, 1024);
-	led = task_new ("led", f_led, 150, 150, 2, 1024);
-  kb = task_new ("led", f_kb, 150, 150, 1, 1024);
+	alarma = task_new ("alarma", f_alarma, 1, 1, 3, 1024);
+	led = task_new ("led", f_led, 1, 1, 2, 1024);
+  kb = task_new ("led", f_kb, 1, 1, 1, 1024);
 
 	pthread_join (alarma, NULL);
 }

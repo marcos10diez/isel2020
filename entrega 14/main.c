@@ -25,19 +25,19 @@ int key_pressed (void)
 
 
 static void alarma_func(struct event_handler_t* this){
-  static const struct timeval period={ 0, 100000};
+  static const struct timeval period={ 0, 100};
   fsm_fire(fsm_alarma);
   timeval_add(&this->next_activation,&this->next_activation,&period);
 }
 
 static void led_func(struct event_handler_t* this){
-  static const struct timeval period={ 0, 100000};
+  static const struct timeval period={ 0, 100};
   fsm_fire(fsm_led);
   timeval_add(&this->next_activation,&this->next_activation,&period);
 }
 
 static void kb_func(struct event_handler_t* this){
-  static const struct timeval period={ 0, 100000};
+  static const struct timeval period={ 0, 100};
   if(key_pressed()){
     keyboard();
   }
@@ -53,7 +53,7 @@ int main ()
   fsm_alarma = fsm_new_alarma();
   fsm_led = fsm_new_led();
 
-  event_handler_init (&eh_alarma, 2, alarma_func);
+  event_handler_init (&eh_alarma, 3, alarma_func);
   reactor_add_handler (&eh_alarma);
 
   event_handler_init (&eh_kb, 2, kb_func);
